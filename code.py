@@ -44,7 +44,7 @@ def show_filters_data():
     import seaborn as sns
     
     # Carregar dados
-    data = '''<seus dados aqui>'''
+    data = '''<dados.csv>'''
     df = pd.read_csv(pd.compat.StringIO(data))
     
     # Preprocessamento de dados
