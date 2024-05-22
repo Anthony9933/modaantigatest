@@ -40,8 +40,8 @@ def show_filters_data():
     st.header("Filtros e Dados")
     
     # Carregar dados
-    data = '''<dados.csv>'''
-    df = pd.read_csv(pd.compat.StringIO(data))
+    df = pd.read_csv('dados.csv')
+
     
     # Preprocessamento de dados
     df['Total_Venda'] = df['Quantidade'] * df['Preço_Venda']
