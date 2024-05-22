@@ -38,10 +38,6 @@ def show_overview():
 
 def show_filters_data():
     st.header("Filtros e Dados")
-    import streamlit as st
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import seaborn as sns
     
     # Carregar dados
     data = '''<dados.csv>'''
