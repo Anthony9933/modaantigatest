@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd 
 import plotly.express as px
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Sidebar (Menu Lateral)
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
@@ -37,6 +38,59 @@ def show_overview():
 
 def show_filters_data():
     st.header("Filtros e Dados")
+    import streamlit as st
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # Carregar dados
+    data = '''<seus dados aqui>'''
+    df = pd.read_csv(pd.compat.StringIO(data))
+    
+    # Preprocessamento de dados
+    df['Total_Venda'] = df['Quantidade'] * df['Preço_Venda']
+    
+    # Sidebar para filtro por estação
+    estacao = st.sidebar.selectbox('Selecionar Estação', df['Estacao'].unique())
+    
+    # Filtrar dados pela estação selecionada
+    df_filtered = df[df['Estacao'] == estacao]
+    
+    # Gráfico de linha de vendas mensais
+    st.title(f'Vendas Mensais - {estacao}')
+    fig, ax = plt.subplots()
+    df_filtered.groupby('Mes').sum()['Total_Venda'].plot(kind='line', ax=ax)
+    ax.set_ylabel('Total de Vendas')
+    st.pyplot(fig)
+    
+    # Gráfico de barras de vendas por categoria
+    st.title('Vendas por Categoria')
+    fig, ax = plt.subplots()
+    df_filtered.groupby('Categoria').sum()['Total_Venda'].plot(kind='bar', ax=ax)
+    ax.set_ylabel('Total de Vendas')
+    st.pyplot(fig)
+    
+    # Gráfico de pizza de vendas por estação
+    st.title('Proporção de Vendas por Estação')
+    fig, ax = plt.subplots()
+    df.groupby('Estacao').sum()['Total_Venda'].plot(kind='pie', ax=ax, autopct='%1.1f%%')
+    ax.set_ylabel('')
+    st.pyplot(fig)
+    
+    # Boxplot de preços por categoria
+    st.title('Distribuição de Preços por Categoria')
+    fig, ax = plt.subplots()
+    sns.boxplot(x='Categoria', y='Preço_Venda', data=df_filtered, ax=ax)
+    ax.set_ylabel('Preço de Venda')
+    st.pyplot(fig)
+    
+    # Mapa de calor de vendas
+    st.title('Mapa de Calor de Vendas')
+    df_pivot = df.pivot_table(index='Mes', columns='Produto', values='Total_Venda', aggfunc='sum')
+    fig, ax = plt.subplots()
+    sns.heatmap(df_pivot, ax=ax)
+    st.pyplot(fig)
+
    
 # Página de Visão Geral
 if page == "Visão Geral":
