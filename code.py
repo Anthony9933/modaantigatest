@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import matplotlib.pyplot as plt
+
 # Configurar o layout da página
 st.set_page_config(layout="wide")
 
@@ -48,19 +48,34 @@ def show_filters_data():
     
     # Gráfico de vendas por estação
     st.header('Vendas por Estação')
-    fig1 = px.bar(df, x='Estacao', y='PdVenda', title='Total de Vendas por Estação', labels={'PdVenda': 'Total de Vendas', 'Estacao': 'Estação'}, text_auto=True)
-    st.plotly_chart(fig1)
+    vendas_por_estacao = df.groupby('Estacao')['PdVenda'].sum().reset_index()
+    plt.figure(figsize=(10, 6))
+    plt.bar(vendas_por_estacao['Estacao'], vendas_por_estacao['PdVenda'], color='skyblue')
+    plt.title('Total de Vendas por Estação')
+    plt.xlabel('Estação')
+    plt.ylabel('Total de Vendas')
+    st.pyplot(plt)
     
     # Gráfico de quantidade de itens vendidos por tecido
     st.header('Quantidade de Itens Vendidos por Tecido')
-    fig2 = px.bar(df, x='Tecido', y='Quantidade', title='Quantidade de Itens Vendidos por Tecido', labels={'Quantidade': 'Quantidade Vendida', 'Tecido': 'Tecido'}, text_auto=True)
-    st.plotly_chart(fig2)
+    quantidade_por_tecido = df.groupby('Tecido')['Quantidade'].sum().reset_index()
+    plt.figure(figsize=(10, 6))
+    plt.bar(quantidade_por_tecido['Tecido'], quantidade_por_tecido['Quantidade'], color='lightgreen')
+    plt.title('Quantidade de Itens Vendidos por Tecido')
+    plt.xlabel('Tecido')
+    plt.ylabel('Quantidade Vendida')
+    st.pyplot(plt)
     
     # Gráfico de lucro por tecido (PdVenda - PdCusto)
     st.header('Lucro por Tecido')
     df['Lucro'] = df['PdVenda'] - df['PdCusto']
-    fig3 = px.bar(df, x='Tecido', y='Lucro', title='Lucro por Tecido', labels={'Lucro': 'Lucro Total', 'Tecido': 'Tecido'}, text_auto=True)
-    st.plotly_chart(fig3)
+    lucro_por_tecido = df.groupby('Tecido')['Lucro'].sum().reset_index()
+    plt.figure(figsize=(10, 6))
+    plt.bar(lucro_por_tecido['Tecido'], lucro_por_tecido['Lucro'], color='lightcoral')
+    plt.title('Lucro por Tecido')
+    plt.xlabel('Tecido')
+    plt.ylabel('Lucro Total')
+    st.pyplot(plt)
     
     # Gráfico de evolução das vendas ao longo do tempo
     st.header('Evolução das Vendas ao Longo do Tempo')
@@ -68,18 +83,25 @@ def show_filters_data():
     df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
     df = df.dropna(subset=['Data'])
     df['AnoMes'] = df['Data'].dt.to_period('M')
-    vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
-    vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)  # Converter de Period para string
-    fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
-    st.plotly_chart(fig4)
+    vendas_mensais = df.groupby('AnoMes')['PdVenda'].sum().reset_index()
+    vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)
+    plt.figure(figsize=(12, 6))
+    plt.plot(vendas_mensais['AnoMes'], vendas_mensais['PdVenda'], marker='o', linestyle='-')
+    plt.title('Evolução das Vendas ao Longo do Tempo')
+    plt.xlabel('Data')
+    plt.ylabel('Total de Vendas')
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    st.pyplot(plt)
     
     # Gráfico de relação entre quantidade e preço de custo
     st.header('Relação entre Quantidade e Preço de Custo')
-    # Verificar se PdCusto e Quantidade são numéricos
-    df = df[pd.to_numeric(df['PdCusto'], errors='coerce').notnull()]
-    df = df[pd.to_numeric(df['Quantidade'], errors='coerce').notnull()]
-    fig5 = px.scatter(df, x='PdCusto', y='Quantidade', title='Relação entre Quantidade e Preço de Custo', labels={'PdCusto': 'Preço de Custo', 'Quantidade': 'Quantidade'})
-    st.plotly_chart(fig5)
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df['PdCusto'], df['Quantidade'], alpha=0.5)
+    plt.title('Relação entre Quantidade e Preço de Custo')
+    plt.xlabel('Preço de Custo')
+    plt.ylabel('Quantidade')
+    st.pyplot(plt)
 
 # Página de Visão Geral
 if page == "Visão Geral":
