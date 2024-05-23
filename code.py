@@ -73,7 +73,7 @@ def show_filters_data():
     #fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
     #st.plotly_chart(fig4)
     
-    fig4, ax = plt.subplots(figsize=(12, 6))
+    fig4, ax = px.subplots(figsize=(12, 6))
     ax.plot(df_ajustada['Data'], df_ajustada['Quantidade'], marker='o', linestyle='-')
     ax.set_title('Evolução das Vendas ao Longo do Tempo')
     ax.set_xlabel('Data')
