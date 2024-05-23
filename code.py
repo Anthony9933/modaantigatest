@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
+
+df = pd.read_csv('sua_base_de_dados_ajustada.csv')
 # Converter a coluna 'Data' para datetime
 df['Data'] = pd.to_datetime(df['Data'], errors='coerce')
 df = df.dropna(subset=['Data'])  # Eliminar linhas com 'Data' nula
