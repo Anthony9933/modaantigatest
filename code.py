@@ -40,6 +40,7 @@ def show_overview():
 def show_filters_data():
     # Título da aplicação
     st.title('Análise de Dados da Loja de Roupas Femininas')
+    # Carregar os dados
     df = pd.read_csv('dados.csv')
     # Mostrar os dados
     st.header('Dados Brutos')
@@ -64,10 +65,11 @@ def show_filters_data():
     # Gráfico de evolução das vendas ao longo do tempo
     st.header('Evolução das Vendas ao Longo do Tempo')
     # Converter a coluna 'Data' para datetime
-    df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m')
-    # Agrupar por ano e mês
-    vendas_mensais = df.groupby(df['Data'].dt.to_period('M')).sum().reset_index()
-    fig4 = px.line(vendas_mensais, x='Data', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'Data': 'Data', 'PdVenda': 'Total de Vendas'})
+    df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
+    df = df.dropna(subset=['Data'])
+    df['AnoMes'] = df['Data'].dt.to_period('M')
+    vendas_mensais = df.groupby('AnoMes').sum().reset_index()
+    fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
     st.plotly_chart(fig4)
     
     # Gráfico de relação entre quantidade e preço de custo
