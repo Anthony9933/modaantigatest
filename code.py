@@ -81,7 +81,7 @@ def show_filters_data():
     ax.grid(True)
     
     # Exibir o gráfico no Streamlit
-    st.pyplot(fig4)
+    st.plotly_chart(fig4)
     
     # Gráfico de relação entre quantidade e preço de custo
     st.header('Relação entre Quantidade e Preço de Custo')
