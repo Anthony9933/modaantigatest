@@ -68,7 +68,8 @@ def show_filters_data():
     df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
     df = df.dropna(subset=['Data'])
     df['AnoMes'] = df['Data'].dt.to_period('M')
-    vendas_mensais = df.groupby('AnoMes').sum().reset_index()
+    vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
+    vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)  # Converter de Period para string
     fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
     st.plotly_chart(fig4)
     
