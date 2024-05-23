@@ -80,11 +80,11 @@ def show_filters_data():
     # Gráfico de evolução das vendas ao longo do tempo
     st.header('Evolução das Vendas ao Longo do Tempo')
     # Converter a coluna 'Data' para datetime
-    df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
-    df = df.dropna(subset=['Data'])
-    df['AnoMes'] = df['Data'].dt.to_period('M')
-    vendas_mensais = df.groupby('AnoMes')['PdVenda'].sum().reset_index()
-    vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)
+    #df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
+    #df = df.dropna(subset=['Data'])
+    #df['AnoMes'] = df['Data'].dt.to_period('M')
+    #vendas_mensais = df.groupby('AnoMes')['PdVenda'].sum().reset_index()
+    #vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)
     plt.figure(figsize=(12, 6))
     plt.plot(vendas_mensais['AnoMes'], vendas_mensais['PdVenda'], marker='o', linestyle='-')
     plt.title('Evolução das Vendas ao Longo do Tempo')
