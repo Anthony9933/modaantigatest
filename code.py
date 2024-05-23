@@ -65,20 +65,20 @@ def show_filters_data():
     # Gráfico de evolução das vendas ao longo do tempo
     st.header('Evolução das Vendas ao Longo do Tempo')
     # Converter a coluna 'Data' para datetime
-    #df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
-    #df = df.dropna(subset=['Data'])
-    #df['AnoMes'] = df['Data'].dt.to_period('M')
-    #vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
-    #vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)  # Converter de Period para string
-    #fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
-    #st.plotly_chart(fig4)
-    plt.figure(figsize=(12, 6))
-    plt.plot(df_ajustada['Data'], df_ajustada['Quantidade'], marker='o', linestyle='-')
-    plt.title('Evolução das Vendas ao Longo do Tempo')
-    plt.xlabel('Data')
-    plt.ylabel('Quantidade')
-    plt.grid(True)
+    df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m', errors='coerce')
+    df = df.dropna(subset=['Data'])
+    df['AnoMes'] = df['Data'].dt.to_period('M')
+    vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
+    vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)  # Converter de Period para string
+    fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
     st.plotly_chart(fig4)
+    #plt.figure(figsize=(12, 6))
+    #plt.plot(df_ajustada['Data'], df_ajustada['Quantidade'], marker='o', linestyle='-')
+    #plt.title('Evolução das Vendas ao Longo do Tempo')
+    #plt.xlabel('Data')
+    #plt.ylabel('Quantidade')
+    #plt.grid(True)
+    #st.plotly_chart(fig4)
     
     # Gráfico de relação entre quantidade e preço de custo
     st.header('Relação entre Quantidade e Preço de Custo')
