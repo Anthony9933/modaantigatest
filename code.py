@@ -36,9 +36,7 @@ def show_overview():
     st.write("Aproveite a exploração do projeto!")
 
 def show_filters_data():
-    #st.header("Filtros e Dados")
-    
-    # Carregar dados
+
     df = pd.read_csv('dados.csv')
     
     # Configurar o layout da página
@@ -81,7 +79,7 @@ def show_filters_data():
     
     # Gráfico de evolução das vendas ao longo do tempo
     st.header('Evolução das Vendas ao Longo do Tempo')
-    df['Data'] = pd.to_datetime(df['Data'])
+    df['Data'] = pd.to_datetime(df['Data'], errors='coerce')
     fig4, ax4 = plt.subplots(figsize=(10, 6))
     df.groupby(df['Data'].dt.to_period('M')).sum()['PdVenda'].plot(ax=ax4)
     ax4.set_title('Evolução das Vendas ao Longo do Tempo')
@@ -91,6 +89,9 @@ def show_filters_data():
     
     # Gráfico de relação entre quantidade e preço de custo
     st.header('Relação entre Quantidade e Preço de Custo')
+    # Verificar se PdCusto e Quantidade são numéricos
+    df = df[pd.to_numeric(df['PdCusto'], errors='coerce').notnull()]
+    df = df[pd.to_numeric(df['Quantidade'], errors='coerce').notnull()]
     fig5, ax5 = plt.subplots(figsize=(10, 6))
     sns.scatterplot(x='PdCusto', y='Quantidade', data=df, ax=ax5)
     ax5.set_title('Relação entre Quantidade e Preço de Custo')
