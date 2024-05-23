@@ -46,7 +46,7 @@ def show_filters_data():
     
     # Mostrar os dados
     st.header('Dados Brutos')
-    st.write(df)
+    #st.write(df)
     
     # Gráfico de vendas por estação
     st.header('Vendas por Estação')
