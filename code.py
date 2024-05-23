@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Carregar os dados
-df = pd.read_csv('dados.csv')
-
 # Configurar o layout da página
 st.set_page_config(layout="wide")
 
@@ -43,10 +40,10 @@ def show_overview():
 def show_filters_data():
     # Título da aplicação
     st.title('Análise de Dados da Loja de Roupas Femininas')
-    
+    df = pd.read_csv('dados.csv')
     # Mostrar os dados
     st.header('Dados Brutos')
-    #st.write(df)
+    st.write(df)
     
     # Gráfico de vendas por estação
     st.header('Vendas por Estação')
