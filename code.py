@@ -70,17 +70,7 @@ def show_filters_data():
     df['AnoMes'] = df['Data'].dt.to_period('M')
     vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
     vendas_mensais['AnoMes'] = vendas_mensais['AnoMes'].astype(str)  # Converter de Period para string
-    #fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
-    #st.plotly_chart(fig4)
-    
-    fig4, ax = px.subplots(figsize=(12, 6))
-    ax.plot(df_ajustada['Data'], df_ajustada['Quantidade'], marker='o', linestyle='-')
-    ax.set_title('Evolução das Vendas ao Longo do Tempo')
-    ax.set_xlabel('Data')
-    ax.set_ylabel('Quantidade')
-    ax.grid(True)
-    
-    # Exibir o gráfico no Streamlit
+    fig4 = px.line(vendas_mensais, x='AnoMes', y='PdVenda', title='Evolução das Vendas ao Longo do Tempo', labels={'AnoMes': 'Data', 'PdVenda': 'Total de Vendas'})
     st.plotly_chart(fig4)
     
     # Gráfico de relação entre quantidade e preço de custo
