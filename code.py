@@ -1,6 +1,5 @@
 import streamlit as st
-import pandas as pd 
-import plotly.express as px
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -37,55 +36,67 @@ def show_overview():
     st.write("Aproveite a exploração do projeto!")
 
 def show_filters_data():
-    st.header("Filtros e Dados")
+    #st.header("Filtros e Dados")
     
     # Carregar dados
     df = pd.read_csv('dados.csv')
-
     
-    # Preprocessamento de dados
-    df['Total_Venda'] = df['Quantidade'] * df['Preço_Venda']
+    # Configurar o layout da página
+    st.set_page_config(layout="wide")
     
-    # Sidebar para filtro por estação
-    estacao = st.sidebar.selectbox('Selecionar Estação', df['Estacao'].unique())
+    # Título da aplicação
+    st.title('Análise de Dados da Loja de Roupas Femininas')
     
-    # Filtrar dados pela estação selecionada
-    df_filtered = df[df['Estacao'] == estacao]
+    # Mostrar os dados
+    st.header('Dados Brutos')
+    st.write(df)
     
-    # Gráfico de linha de vendas mensais
-    st.title(f'Vendas Mensais - {estacao}')
-    fig, ax = plt.subplots()
-    df_filtered.groupby('Mes').sum()['Total_Venda'].plot(kind='line', ax=ax)
-    ax.set_ylabel('Total de Vendas')
-    st.pyplot(fig)
+    # Gráfico de vendas por estação
+    st.header('Vendas por Estação')
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Estacao', y='PdVenda', data=df, estimator=sum, ax=ax1)
+    ax1.set_title('Total de Vendas por Estação')
+    ax1.set_xlabel('Estação')
+    ax1.set_ylabel('Total de Vendas')
+    st.pyplot(fig1)
     
-    # Gráfico de barras de vendas por categoria
-    st.title('Vendas por Categoria')
-    fig, ax = plt.subplots()
-    df_filtered.groupby('Categoria').sum()['Total_Venda'].plot(kind='bar', ax=ax)
-    ax.set_ylabel('Total de Vendas')
-    st.pyplot(fig)
+    # Gráfico de quantidade de itens vendidos por tecido
+    st.header('Quantidade de Itens Vendidos por Tecido')
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Tecido', y='Quantidade', data=df, estimator=sum, ax=ax2)
+    ax2.set_title('Quantidade de Itens Vendidos por Tecido')
+    ax2.set_xlabel('Tecido')
+    ax2.set_ylabel('Quantidade Vendida')
+    st.pyplot(fig2)
     
-    # Gráfico de pizza de vendas por estação
-    st.title('Proporção de Vendas por Estação')
-    fig, ax = plt.subplots()
-    df.groupby('Estacao').sum()['Total_Venda'].plot(kind='pie', ax=ax, autopct='%1.1f%%')
-    ax.set_ylabel('')
-    st.pyplot(fig)
+    # Gráfico de lucro por tecido (PdVenda - PdCusto)
+    st.header('Lucro por Tecido')
+    df['Lucro'] = df['PdVenda'] - df['PdCusto']
+    fig3, ax3 = plt.subplots(figsize=(10, 6))
+    sns.barplot(x='Tecido', y='Lucro', data=df, estimator=sum, ax=ax3)
+    ax3.set_title('Lucro por Tecido')
+    ax3.set_xlabel('Tecido')
+    ax3.set_ylabel('Lucro Total')
+    st.pyplot(fig3)
     
-    # Boxplot de preços por categoria
-    st.title('Distribuição de Preços por Categoria')
-    fig, ax = plt.subplots()
-    sns.boxplot(x='Categoria', y='Preço_Venda', data=df_filtered, ax=ax)
-    ax.set_ylabel('Preço de Venda')
-    st.pyplot(fig)
+    # Gráfico de evolução das vendas ao longo do tempo
+    st.header('Evolução das Vendas ao Longo do Tempo')
+    df['Data'] = pd.to_datetime(df['Data'])
+    fig4, ax4 = plt.subplots(figsize=(10, 6))
+    df.groupby(df['Data'].dt.to_period('M')).sum()['PdVenda'].plot(ax=ax4)
+    ax4.set_title('Evolução das Vendas ao Longo do Tempo')
+    ax4.set_xlabel('Data')
+    ax4.set_ylabel('Total de Vendas')
+    st.pyplot(fig4)
     
-    # Mapa de calor de vendas
-    st.title('Mapa de Calor de Vendas')
-    df_pivot = df.pivot_table(index='Mes', columns='Produto', values='Total_Venda', aggfunc='sum')
-    fig, ax = plt.subplots()
-    sns.heatmap(df_pivot, ax=ax)
-    st.pyplot(fig)
+    # Gráfico de relação entre quantidade e preço de custo
+    st.header('Relação entre Quantidade e Preço de Custo')
+    fig5, ax5 = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(x='PdCusto', y='Quantidade', data=df, ax=ax5)
+    ax5.set_title('Relação entre Quantidade e Preço de Custo')
+    ax5.set_xlabel('Preço de Custo')
+    ax5.set_ylabel('Quantidade')
+    st.pyplot(fig5)
 
    
 # Página de Visão Geral
