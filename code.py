@@ -22,7 +22,8 @@ df['VendaTotal'] = df['Quantidade'] * df['PdVenda']
 vendas_mensais = df.groupby(['Ano', 'Mes'])['VendaTotal'].sum().reset_index()
 
 # Criar uma coluna de data fictícia para plotar
-vendas_mensais['AnoMes'] = pd.to_datetime(vendas_mensais[['Ano', 'Mes']].assign(DIA=1))
+vendas_mensais['AnoMes'] = vendas_mensais.apply(lambda row: f"{row['Ano']}-{row['Mes']:02d}-01", axis=1)
+vendas_mensais['AnoMes'] = pd.to_datetime(vendas_mensais['AnoMes'])
 
 # Configurar o título da aplicação
 st.title('Evolução das Vendas ao Longo dos Anos e Meses')
