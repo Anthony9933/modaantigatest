@@ -1,24 +1,29 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import streamlit as st
+import pandas as pd
+import plotly.express as px
 
+# Função para carregar os dados
+@st.cache
+def load_data():
+    # Substitua 'seu_arquivo.csv' pelo caminho para o seu arquivo de dados
+    df = pd.read_csv('sua_base_de_dados_ajustada.csv')
+    df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m-%d')
+    return df
 
-df = pd.read_csv('sua_base_de_dados_ajustada.csv')
-# Converter a coluna 'Data' para datetime
-df['Data'] = pd.to_datetime(df['Data'], errors='coerce')
-df = df.dropna(subset=['Data'])  # Eliminar linhas com 'Data' nula
+# Carregar os dados
+df = load_data()
 
-# Verificar se ainda existem datas nulas
-st.write("Existem datas nulas:", df['Data'].isnull().any())
+# Processar os dados para obter vendas anuais
+df['Ano'] = df['Data'].dt.year
+df['VendaTotal'] = df['Quantidade'] * df['PdVenda']
+vendas_anuais = df.groupby('Ano')['VendaTotal'].sum().reset_index()
 
-df['AnoMes'] = df['Data'].dt.to_period('M').dt.to_timestamp()  # Converter para o primeiro dia do mês
-vendas_mensais = df.groupby('AnoMes').agg({'PdVenda': 'sum'}).reset_index()
+# Configurar o título da aplicação
+st.title('Evolução das Vendas ao Longo dos Anos')
 
-plt.figure(figsize=(12, 6))
-plt.plot(vendas_mensais['AnoMes'], vendas_mensais['PdVenda'], marker='o', linestyle='-')
-plt.title('Evolução das Vendas ao Longo do Tempo')
-plt.xlabel('Data')
-plt.ylabel('Total de Vendas')
-plt.xticks(rotation=45)
-plt.grid(True)
-st.pyplot(plt)
+# Criar o gráfico de evolução das vendas
+fig = px.line(vendas_anuais, x='Ano', y='VendaTotal', title='Evolução das Vendas Anuais')
+
+# Mostrar o gráfico no Streamlit
+st.plotly_chart(fig)
+
