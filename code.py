@@ -105,6 +105,30 @@ def show_filters_data():
     # Mostrar os gráficos no Streamlit
     st.plotly_chart(fig_tecido)
     st.plotly_chart(fig_estacao)
+    # Filtrar os dados com base na seleção
+    df_filtered = df[(df['Tecido'].isin(selected_tecidos)) & (df['Estacao'].isin(selected_estacoes)) & (df['Ano'].isin(selected_anos))]
+
+    # Agrupar por ano, mês e tecido
+    vendas_por_tecido = df_filtered.groupby(['Ano', 'Mes', 'Tecido'])['VendaTotal'].sum().reset_index()
+
+    # Agrupar por ano e estação
+    vendas_por_estacao = df_filtered.groupby(['Ano', 'Estacao'])['VendaTotal'].sum().reset_index()
+
+    # Criar colunas de data fictícia para plotar
+    vendas_por_tecido['AnoMes'] = vendas_por_tecido.apply(lambda row: f"{row['Ano']}-{row['Mes']:02d}-01", axis=1)
+    vendas_por_tecido['AnoMes'] = pd.to_datetime(vendas_por_tecido['AnoMes'])
+
+    # Gráfico de evolução das vendas por tecido
+    fig_tecido2 = px.line(vendas_por_tecido, x='AnoMes', y='VendaTotal', color='Tecido', title='Evolução das Vendas por Tecido',
+                         labels={'AnoMes': 'Ano e Mês', 'VendaTotal': 'Vendas Totais', 'Tecido': 'Tecido'})
+
+    # Gráfico de vendas por estação
+    fig_estacao2 = px.line(vendas_por_estacao, x='Ano', y='VendaTotal', color='Estacao', title='Evolução das Vendas por Estação',
+                          labels={'Ano': 'Ano', 'VendaTotal': 'Vendas Totais', 'Estacao': 'Estação'})
+
+    # Mostrar os gráficos no Streamlit
+    st.plotly_chart(fig_tecido2)
+    st.plotly_chart(fig_estacao2)
 
 # Página de Visão Geral
 if page == "Visão Geral":
