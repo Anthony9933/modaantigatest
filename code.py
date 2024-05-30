@@ -6,11 +6,9 @@ import plotly.express as px
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
 # Função para carregar os dados
-@st.cache
+@st.cache_data
 def load_data():
     # Substitua 'sua_base_de_dados_ajustada.csv' pelo caminho para o seu arquivo de dados
-    #df = pd.read_csv('sua_base_de_dados_ajustada.csv')
-    #df = pd.read_csv('adjusted_data.csv')
     df = pd.read_csv('adjusted_data2.csv')
     df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m-%d')
     return df
@@ -77,7 +75,7 @@ def show_filters_data():
     # Mostrar o gráfico no Streamlit
     st.plotly_chart(fig)
 
-# Multiselect para escolher tecidos
+    # Multiselect para escolher tecidos
     tecidos = ['Flanela', 'Tactel', 'Cetim', 'Jeans', 'Seda', 'Algodão', 'Viscose', 'Poliéster', 'Sarja', 'Tricô', 'Lã', 'Couro', 'Moletom', 'Malha', 'Chiffon', 'Linho']
     selected_tecidos = st.multiselect("Selecione os Tecidos", tecidos, default=tecidos)
 
@@ -85,15 +83,18 @@ def show_filters_data():
     estacoes = ['Verão', 'Outono', 'Inverno', 'Primavera']
     selected_estacoes = st.multiselect("Selecione as Estações", estacoes, default=estacoes)
 
+    # Multiselect para escolher anos
+    anos = df['Ano'].unique().tolist()
+    selected_anos = st.multiselect("Selecione os Anos", anos, default=anos)
+
     # Filtrar os dados com base na seleção
-    df_filtered_tecido = df[df['Tecido'].isin(selected_tecidos)]
-    df_filtered_estacao = df[df['Estacao'].isin(selected_estacoes)]
+    df_filtered = df[(df['Tecido'].isin(selected_tecidos)) & (df['Estacao'].isin(selected_estacoes)) & (df['Ano'].isin(selected_anos))]
 
     # Agrupar por ano, mês e tecido
-    vendas_por_tecido = df_filtered_tecido.groupby(['Ano', 'Mes', 'Tecido'])['VendaTotal'].sum().reset_index()
+    vendas_por_tecido = df_filtered.groupby(['Ano', 'Mes', 'Tecido'])['VendaTotal'].sum().reset_index()
 
     # Agrupar por ano e estação
-    vendas_por_estacao = df_filtered_estacao.groupby(['Ano', 'Estacao'])['VendaTotal'].sum().reset_index()
+    vendas_por_estacao = df_filtered.groupby(['Ano', 'Estacao'])['VendaTotal'].sum().reset_index()
 
     # Criar colunas de data fictícia para plotar
     vendas_por_tecido['AnoMes'] = vendas_por_tecido.apply(lambda row: f"{row['Ano']}-{row['Mes']:02d}-01", axis=1)
