@@ -75,6 +75,40 @@ def show_filters_data():
     # Mostrar o gráfico no Streamlit
     st.plotly_chart(fig)
 
+# Multiselect para escolher tecidos
+    tecidos = ['Flanela', 'Tactel', 'Cetim', 'Jeans', 'Seda', 'Algodão', 'Viscose', 'Poliéster', 'Sarja', 'Tricô', 'Lã', 'Couro', 'Moletom', 'Malha', 'Chiffon', 'Linho']
+    selected_tecidos = st.multiselect("Selecione os Tecidos", tecidos, default=tecidos)
+
+    # Multiselect para escolher estações
+    estacoes = ['Verão', 'Outono', 'Inverno', 'Primavera']
+    selected_estacoes = st.multiselect("Selecione as Estações", estacoes, default=estacoes)
+
+    # Filtrar os dados com base na seleção
+    df_filtered_tecido = df[df['Tecido'].isin(selected_tecidos)]
+    df_filtered_estacao = df[df['Estacao'].isin(selected_estacoes)]
+
+    # Agrupar por ano, mês e tecido
+    vendas_por_tecido = df_filtered_tecido.groupby(['Ano', 'Mes', 'Tecido'])['VendaTotal'].sum().reset_index()
+
+    # Agrupar por ano e estação
+    vendas_por_estacao = df_filtered_estacao.groupby(['Ano', 'Estacao'])['VendaTotal'].sum().reset_index()
+
+    # Criar colunas de data fictícia para plotar
+    vendas_por_tecido['AnoMes'] = vendas_por_tecido.apply(lambda row: f"{row['Ano']}-{row['Mes']:02d}-01", axis=1)
+    vendas_por_tecido['AnoMes'] = pd.to_datetime(vendas_por_tecido['AnoMes'])
+
+    # Gráfico de evolução das vendas por tecido
+    fig_tecido = px.line(vendas_por_tecido, x='AnoMes', y='VendaTotal', color='Tecido', title='Evolução das Vendas por Tecido',
+                         labels={'AnoMes': 'Ano e Mês', 'VendaTotal': 'Vendas Totais', 'Tecido': 'Tecido'})
+
+    # Gráfico de vendas por estação
+    fig_estacao = px.line(vendas_por_estacao, x='Ano', y='VendaTotal', color='Estacao', title='Evolução das Vendas por Estação',
+                          labels={'Ano': 'Ano', 'VendaTotal': 'Vendas Totais', 'Estacao': 'Estação'})
+
+    # Mostrar os gráficos no Streamlit
+    st.plotly_chart(fig_tecido)
+    st.plotly_chart(fig_estacao)
+
 # Página de Visão Geral
 if page == "Visão Geral":
     show_overview()
