@@ -39,6 +39,10 @@ def show_overview():
     st.write("""
         Para explorar o projeto, você pode navegar por diferentes seções usando a barra lateral. As principais seções incluem:
     """)
+    st.markdown("- *Visualização do Conjunto de Dados*: Oferece uma visão rápida dos dados disponíveis.")
+    st.markdown("- *Descrição das Colunas*: Explica o significado de cada coluna no conjunto de dados.")
+    st.markdown("- *Estatísticas Resumidas*: Apresenta informações estatísticas sobre o conjunto de dados.")
+    
 
     st.header("Conclusão")
     st.write("""
