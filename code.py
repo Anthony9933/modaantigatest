@@ -96,17 +96,6 @@ def show_filters_data():
     # Agrupar por estação e calcular o lucro total
     lucro_por_estacao = df_filtered.groupby('Estacao')['Lucro'].sum().reset_index()
 
-    # Gráfico de lucros por tecido
-    fig_tecido = px.bar(lucro_por_tecido, x='Tecido', y='Lucro', title='Lucro Total por Tecido', labels={'Tecido': 'Tecido', 'Lucro': 'Lucro Total'})
-
-    # Gráfico de lucros por estação
-    fig_estacao = px.bar(lucro_por_estacao, x='Estacao', y='Lucro', title='Lucro Total por Estação', labels={'Estacao': 'Estação', 'Lucro': 'Lucro Total'})
-
-    # Mostrar os gráficos no Streamlit
-    st.plotly_chart(fig_tecido)
-    st.plotly_chart(fig_estacao)
-
-    # Criar a coluna 'VendaTotal'
     df_filtered['VendaTotal'] = df_filtered['Quantidade'] * df_filtered['PdVenda']
 
     # Agrupar por ano, mês e tecido
@@ -130,6 +119,16 @@ def show_filters_data():
     # Mostrar os gráficos no Streamlit
     st.plotly_chart(fig_tecido2)
     st.plotly_chart(fig_estacao2)
+    
+    # Gráfico de lucros por tecido
+    fig_tecido = px.bar(lucro_por_tecido, x='Tecido', y='Lucro', title='Lucro Total por Tecido', labels={'Tecido': 'Tecido', 'Lucro': 'Lucro Total'})
+
+    # Gráfico de lucros por estação
+    fig_estacao = px.bar(lucro_por_estacao, x='Estacao', y='Lucro', title='Lucro Total por Estação', labels={'Estacao': 'Estação', 'Lucro': 'Lucro Total'})
+
+    # Mostrar os gráficos no Streamlit
+    st.plotly_chart(fig_tecido)
+    st.plotly_chart(fig_estacao)
 
 # Página de Visão Geral
 if page == "Visão Geral":
