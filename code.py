@@ -105,8 +105,9 @@ def show_filters_data():
     # Mostrar os gráficos no Streamlit
     st.plotly_chart(fig_tecido)
     st.plotly_chart(fig_estacao)
-    # Filtrar os dados com base na seleção
-    df_filtered = df[(df['Tecido'].isin(selected_tecidos)) & (df['Estacao'].isin(selected_estacoes)) & (df['Ano'].isin(selected_anos))]
+
+    # Criar a coluna 'VendaTotal'
+    df_filtered['VendaTotal'] = df_filtered['Quantidade'] * df_filtered['PdVenda']
 
     # Agrupar por ano, mês e tecido
     vendas_por_tecido = df_filtered.groupby(['Ano', 'Mes', 'Tecido'])['VendaTotal'].sum().reset_index()
