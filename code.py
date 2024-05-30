@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 def show_overview():
-    
     # Visão Geral do Projeto
     st.header("Visão Geral do Projeto")
     st.write("Bem-vindo ao projeto de Visualização de dados da loja Moda Antiga! Este projeto gira em torno da análise e apresentação "
