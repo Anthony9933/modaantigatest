@@ -9,7 +9,8 @@ page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dad
 @st.cache
 def load_data():
     # Substitua 'sua_base_de_dados_ajustada.csv' pelo caminho para o seu arquivo de dados
-    df = pd.read_csv('sua_base_de_dados_ajustada.csv')
+    #df = pd.read_csv('sua_base_de_dados_ajustada.csv')
+    df = pd.read_csv('adjusted_data.csv')
     df['Data'] = pd.to_datetime(df['Data'], format='%Y-%m-%d')
     return df
 
